@@ -1,0 +1,74 @@
+{
+  "key.category.bettermaceswap.general": "BetterMaceSwap",
+
+  "key.bettermaceswap.breach_swap_toggle": "Toggle Auto Attribute Swap",
+  "key.bettermaceswap.stun_slam_toggle": "Toggle Auto Stun Slam",
+  "key.bettermaceswap.mace_mode_cycle": "Cycle Mace Mode (Density/Breach)",
+  "key.bettermaceswap.pearl_catch_toggle": "Toggle Pearl Catch",
+  "key.bettermaceswap.aim_lock_toggle": "Toggle Aim Lock",
+  "key.bettermaceswap.aim_assist_toggle": "Toggle Aim Assist",
+  "key.bettermaceswap.wind_charge_toggle": "Toggle Wind Charge Logic",
+
+  "text.autoconfig.bettermaceswap.title": "Better Mace Swap Config",
+
+  "text.autoconfig.bettermaceswap.option.autoBreachSwapEnabled": "Auto Attribute Swap",
+  "text.autoconfig.bettermaceswap.option.autoBreachSwapEnabled.@Tooltip": "Automatically swap to Mace when hitting with a Sword or Axe.",
+
+  "text.autoconfig.bettermaceswap.option.smartSwitchEnabled": "Smart Switch",
+  "text.autoconfig.bettermaceswap.option.smartSwitchEnabled.@Tooltip": "Automatically picks Density when falling and Breach when on the ground.",
+
+  "text.autoconfig.bettermaceswap.option.breachSwapBackTicks": "Swap Delay (Ticks)",
+  "text.autoconfig.bettermaceswap.option.breachSwapBackTicks.@Tooltip": "Ticks to wait before swapping back to your previous item.",
+
+  "text.autoconfig.bettermaceswap.option.autoStunSlamEnabled": "Auto Stun Slam",
+  "text.autoconfig.bettermaceswap.option.autoStunSlamEnabled.@Tooltip": "Automatically Axe-stun then Mace-slam when hitting a shield.",
+
+  "text.autoconfig.bettermaceswap.option.combatTargetPlayers": "Target Players (Combat)",
+  "text.autoconfig.bettermaceswap.option.combatTargetPlayers.@Tooltip": "Enable auto-swaps and stun logic against players.",
+
+  "text.autoconfig.bettermaceswap.option.combatTargetMobs": "Target Mobs (Combat)",
+  "text.autoconfig.bettermaceswap.option.combatTargetMobs.@Tooltip": "Enable auto-swaps and stun logic against mobs and animals.",
+
+  "text.autoconfig.bettermaceswap.option.maceMode": "Default Mace Mode",
+  "text.autoconfig.bettermaceswap.option.maceMode.@Tooltip": "Prioritized enchantment when Smart Switch is OFF.",
+
+  "text.autoconfig.bettermaceswap.option.attributeSwapMode": "Swap Trigger",
+  "text.autoconfig.bettermaceswap.option.attributeSwapMode.@Tooltip": "Decide if swaps trigger on all items or just weapons.",
+
+  "text.autoconfig.bettermaceswap.option.windOnRightClickEnabled": "Right-Click Wind Charge",
+  "text.autoconfig.bettermaceswap.option.windOnRightClickEnabled.@Tooltip": "Right-clicking with a weapon fires a Wind Charge from inventory.",
+
+  "text.autoconfig.bettermaceswap.option.pearlCatchEnabled": "Pearl Catch",
+  "text.autoconfig.bettermaceswap.option.pearlCatchEnabled.@Tooltip": "Fire a Wind Charge after throwing an Ender Pearl while looking up.",
+
+  "text.autoconfig.bettermaceswap.option.pearlCatchDelayTicks": "Catch Delay (Ticks)",
+  "text.autoconfig.bettermaceswap.option.pearlCatchDelayTicks.@Tooltip": "Ticks to wait after pearl throw before firing Wind Charge.",
+
+  "text.autoconfig.bettermaceswap.option.pearlCatchAngle": "Catch Angle",
+  "text.autoconfig.bettermaceswap.option.pearlCatchAngle.@Tooltip": "Minimum pitch angle to trigger Pearl Catch.",
+
+  "text.autoconfig.bettermaceswap.option.pearlReturnMode": "Return Slot",
+  "text.autoconfig.bettermaceswap.option.pearlReturnMode.@Tooltip": "Which slot to return to after a pearl/wind combo.",
+
+  "text.autoconfig.bettermaceswap.option.aimAssistEnabled": "Aim Assist",
+  "text.autoconfig.bettermaceswap.option.aimAssistEnabled.@Tooltip": "Smoothly tracks targets while falling for Mace slams.",
+
+  "text.autoconfig.bettermaceswap.option.aimSpeed": "Aim Speed",
+  "text.autoconfig.bettermaceswap.option.aimSpeed.@Tooltip": "How fast the crosshair moves toward the target.",
+
+  "text.autoconfig.bettermaceswap.option.aimIntensity": "Aim Intensity",
+  "text.autoconfig.bettermaceswap.option.aimIntensity.@Tooltip": "The strength of the aim correction.",
+
+  "text.autoconfig.bettermaceswap.option.aimFallBlocks": "Min Fall Height",
+  "text.autoconfig.bettermaceswap.option.aimFallBlocks.@Tooltip": "Blocks you must fall before Aim Assist activates.",
+
+  "text.autoconfig.bettermaceswap.option.aimTargetMobs": "Target Mobs (Aim)",
+  "text.autoconfig.bettermaceswap.option.aimTargetMobs.@Tooltip": "Aim assist tracks mobs/animals.",
+
+  "text.autoconfig.bettermaceswap.option.aimTargetPlayers": "Target Players (Aim)",
+  "text.autoconfig.bettermaceswap.option.aimTargetPlayers.@Tooltip": "Aim assist tracks players.",
+
+  "text.autoconfig.bettermaceswap.category.Combat": "Combat Settings",
+  "text.autoconfig.bettermaceswap.category.Pearl": "Pearl Settings",
+  "text.autoconfig.bettermaceswap.category.Aim Assist": "Aim Assist"
+}
