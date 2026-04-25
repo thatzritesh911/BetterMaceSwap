@@ -1,16 +1,16 @@
 # BetterMaceSwap
-A client-side Fabric mod for Minecraft 1.21.10 / 1.21.11 that automates mace combat sequences for PvP — no manual hotkey juggling required.
+A Fabric client-side PvP automation mod for Minecraft 1.21.11.
 
 ## Features
-- Automatically swaps to Mace after hitting with a Sword, then swaps back after a configurable delay
-- Supports Density and Breach enchantment modes
-- Detects enemy shield blocks and axe-stuns automatically, then follows up with a mace slam
-- Automatically fires a Wind Charge after throwing an Ender Pearl (Pearl Catch)
-- Camera locks straight up when pearl is thrown at 60° or higher
-- Wind charge fires from offhand if available, falls back to hotbar
-- Automatically switches to sword after Wind Charge fires
-- All features toggleable via keybinds or Mod Menu config screen
-- Target filters: Players, Mobs, Animals
+- **Auto Attribute Swap** — swaps to mace after hitting with sword/axe
+- **Smart Switch** — auto picks Density when falling, Breach when grounded
+- **Auto Stun Slam** — axe stuns shielding targets then mace slams
+- **Pearl Catch** — fires wind charge after throwing ender pearl while looking up
+- **Right-Click Wind Charge** — fires wind charge from inventory on right click with weapon
+- **Aim Assist** — smoothly tracks targets while falling for mace slams
+- **Aim Lock** — locks camera downward
+- Full keybind support with in-game toggles
+- Mod Menu config screen
 
 ## Requirements
 - Fabric Loader 0.18.4+
