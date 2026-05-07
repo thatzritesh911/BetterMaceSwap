@@ -15,9 +15,12 @@ public class KeyBindings {
     public static KeyBinding AIM_LOCK_TOGGLE;
     public static KeyBinding AIM_ASSIST_TOGGLE;
     public static KeyBinding WIND_CHARGE_TOGGLE;
-    // Removed FORCE_RESET here
+    public static KeyBinding LUNGE_SWAP_TOGGLE;
+    public static KeyBinding TRIGGER_BOT_TOGGLE;
+    public static KeyBinding AIR_POTS_TOGGLE;
+    public static KeyBinding AIM_MODE_TOGGLE;
 
-  private static final KeyBinding.Category CATEGORY =
+    private static final KeyBinding.Category CATEGORY =
         KeyBinding.Category.create(Identifier.of("bettermaceswap", "general"));
 
     public static void register() {
@@ -45,14 +48,7 @@ public class KeyBindings {
         PEARL_CATCH_TOGGLE = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.bettermaceswap.pearl_catch_toggle",
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_M,
-                CATEGORY
-        ));
-
-        AIM_LOCK_TOGGLE = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.bettermaceswap.aim_lock_toggle",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_X,
+                InputUtil.UNKNOWN_KEY.getCode(),
                 CATEGORY
         ));
 
@@ -70,6 +66,32 @@ public class KeyBindings {
                 CATEGORY
         ));
 
-        // Removed the registerKeyBinding block for FORCE_RESET
+        LUNGE_SWAP_TOGGLE = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.bettermaceswap.lunge_swap_toggle",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_J,
+                CATEGORY
+        ));
+
+        TRIGGER_BOT_TOGGLE = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.bettermaceswap.trigger_bot_toggle",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_K,
+                CATEGORY
+        ));
+
+        AIR_POTS_TOGGLE = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.bettermaceswap.air_pots_toggle",
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(),
+                CATEGORY
+        ));
+
+        AIM_MODE_TOGGLE = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.bettermaceswap.aim_mode_toggle",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_G,
+                CATEGORY
+        ));
     }
 }

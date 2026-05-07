@@ -3,7 +3,7 @@
 	"id": "bettermaceswap",
 	"version": "${version}",
 	"name": "BetterMaceSwap",
-	"description": "Mace PvP automation: auto breach swap and stun slam axe+mace combo.",
+	"description": "Advanced mace PvP mod: auto breach swap, stun slam combo, lunge swap, aim assist and more.",
 	"authors": ["RITESH_911"],
 	"contact": {
 		"sources": "https://github.com/thatzritesh911/BetterMaceSwap/tree/1.21.11",

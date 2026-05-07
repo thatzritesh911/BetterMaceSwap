@@ -8,11 +8,16 @@
   "key.bettermaceswap.aim_lock_toggle": "Toggle Aim Lock",
   "key.bettermaceswap.aim_assist_toggle": "Toggle Aim Assist",
   "key.bettermaceswap.wind_charge_toggle": "Toggle Wind Charge Logic",
+  "key.bettermaceswap.lunge_swap_toggle": "Toggle Lunge Swap",
+  "key.bettermaceswap.trigger_bot_toggle": "Toggle Trigger Bot",
+  "key.bettermaceswap.air_pots_toggle": "Toggle Air Pots",
+  "key.bettermaceswap.aim_mode_toggle": "Toggle Aim Assist Mode",
 
   "text.autoconfig.bettermaceswap.title": "Better Mace Swap Config",
   "text.autoconfig.bettermaceswap.category.Combat": "Combat Settings",
   "text.autoconfig.bettermaceswap.category.Pearl": "Pearl Settings",
   "text.autoconfig.bettermaceswap.category.Aim Assist": "Aim Assist",
+  "text.autoconfig.bettermaceswap.category.Misc": "Miscellaneous",
 
   "text.autoconfig.bettermaceswap.option.autoBreachSwapEnabled": "Auto Attribute Swap",
   "text.autoconfig.bettermaceswap.option.autoBreachSwapEnabled.@Tooltip": "Automatically swap to Mace when hitting with a Sword or Axe.",
@@ -38,9 +43,6 @@
   "text.autoconfig.bettermaceswap.option.attributeSwapMode": "Swap Trigger",
   "text.autoconfig.bettermaceswap.option.attributeSwapMode.@Tooltip": "Decide if swaps trigger on all items or just weapons.",
 
-  "text.autoconfig.bettermaceswap.option.windOnRightClickEnabled": "Right-Click Wind Charge",
-  "text.autoconfig.bettermaceswap.option.windOnRightClickEnabled.@Tooltip": "Right-clicking with a weapon fires a Wind Charge from inventory.",
-
   "text.autoconfig.bettermaceswap.option.pearlCatchEnabled": "Pearl Catch",
   "text.autoconfig.bettermaceswap.option.pearlCatchEnabled.@Tooltip": "Fire a Wind Charge after throwing an Ender Pearl while looking up.",
 
@@ -59,15 +61,42 @@
   "text.autoconfig.bettermaceswap.option.aimSpeed": "Aim Speed",
   "text.autoconfig.bettermaceswap.option.aimSpeed.@Tooltip": "How fast the crosshair moves toward the target.",
 
-  "text.autoconfig.bettermaceswap.option.aimIntensity": "Aim Intensity",
-  "text.autoconfig.bettermaceswap.option.aimIntensity.@Tooltip": "The strength of the aim correction.",
+  "text.autoconfig.bettermaceswap.option.aimIntensity": "Aim Distance",
+  "text.autoconfig.bettermaceswap.option.aimIntensity.@Tooltip": "The distance for aim assist.",
 
   "text.autoconfig.bettermaceswap.option.aimFallBlocks": "Min Fall Height",
   "text.autoconfig.bettermaceswap.option.aimFallBlocks.@Tooltip": "Blocks you must fall before Aim Assist activates.",
 
   "text.autoconfig.bettermaceswap.option.aimTargetMobs": "Target Mobs (Aim)",
-  "text.autoconfig.bettermaceswap.option.aimTargetMobs.@Tooltip": "Aim assist tracks mobs/animals.",
+  "text.autoconfig.bettermaceswap.option.aimTargetMobs.@Tooltip": "Aim assist tracks mobs and animals.",
 
   "text.autoconfig.bettermaceswap.option.aimTargetPlayers": "Target Players (Aim)",
-  "text.autoconfig.bettermaceswap.option.aimTargetPlayers.@Tooltip": "Aim assist tracks players."
+  "text.autoconfig.bettermaceswap.option.aimTargetPlayers.@Tooltip": "Aim assist tracks other players.",
+
+  "text.autoconfig.bettermaceswap.option.aimBone": "Aim Target Bone",
+  "text.autoconfig.bettermaceswap.option.aimBone.@Tooltip": "Which part of the body to aim at (Eye, Chest, or Legs).",
+
+  "text.autoconfig.bettermaceswap.option.triggerBotEnabled": "Trigger Bot",
+  "text.autoconfig.bettermaceswap.option.triggerBotEnabled.@Tooltip": "Automatically attack when looking at a valid target.",
+
+  "text.autoconfig.bettermaceswap.option.triggerBotFallingOnly": "Trigger Bot (Falling Only)",
+  "text.autoconfig.bettermaceswap.option.triggerBotFallingOnly.@Tooltip": "Only attack automatically if you are currently falling.",
+
+  "text.autoconfig.bettermaceswap.option.aimMode": "Aim Assist Mode",
+  "text.autoconfig.bettermaceswap.option.aimMode.@Tooltip": "WHILE FALLING: Only aims when falling. ALWAYS: Aims whenever a target is found.",
+
+  "text.autoconfig.bettermaceswap.option.lungeSwapEnabled": "Lunge Swap",
+  "text.autoconfig.bettermaceswap.option.lungeSwapEnabled.@Tooltip": "Automatically swap to Mace when using Wind Charge lunge.",
+
+  "text.autoconfig.bettermaceswap.option.lungeSwapDelay": "Lunge Swap Delay",
+  "text.autoconfig.bettermaceswap.option.lungeSwapDelay.@Tooltip": "Delay before swapping back after a lunge.",
+
+  "text.autoconfig.bettermaceswap.option.windOnRightClickEnabled": "Right-Click Wind Charge",
+  "text.autoconfig.bettermaceswap.option.windOnRightClickEnabled.@Tooltip": "Right-clicking with a weapon fires a Wind Charge from inventory.",
+
+  "text.autoconfig.bettermaceswap.option.airPotsEnabled": "Auto Air Pots",
+  "text.autoconfig.bettermaceswap.option.airPotsEnabled.@Tooltip": "Automatically splash speed/strength potions while in the air.",
+
+  "text.autoconfig.bettermaceswap.option.autoChestplateOnTrigger": "Auto Chestplate",
+  "text.autoconfig.bettermaceswap.option.autoChestplateOnTrigger.@Tooltip": "Equip chestplate automatically when combat features trigger."
 }

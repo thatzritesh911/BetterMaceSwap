@@ -6,7 +6,8 @@
         "ClientPlayerEntityMixin",
         "AttackMixin",
         "InventoryAccessor",
-        "EnderPearlEntityMixin"
+        "EnderPearlEntityMixin",
+        "LungeAttackMixin"
     ],
     "injectors": {
         "defaultRequire": 1
