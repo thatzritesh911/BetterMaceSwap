@@ -35,5 +35,3 @@ Find these in Minecraft Controls under **BetterMaceSwap**:
 ## License
 MIT
 
-
-<meta name="google-site-verification" content="M3St8pa5lG0ifEbdVvRkymTlKAo26nO6tiG9R3zhr1Y" />
