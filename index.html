@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BetterMaceSwap — Minecraft Fabric Mace PvP Mod</title>
+<meta name="description" content="Advanced mace PvP automation for Minecraft. Auto-swap, aim assist, trigger bot — focus on the fight, not the hotkeys.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0b;color:#e8e6e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes scanline{0%{transform:translateY(-100%)}100%{transform:translateY(400%)}}
+.fade-up{opacity:0;animation:fadeUp .7s cubic-bezier(.22,1,.36,1) forwards}
+.d1{animation-delay:.1s}.d2{animation-delay:.22s}.d3{animation-delay:.34s}.d4{animation-delay:.46s}.d5{animation-delay:.58s}
+.hero{padding:4rem 2rem 3rem;text-align:center;position:relative;border-bottom:0.5px solid #1f1f21}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,#1a1030 0%,transparent 70%);pointer-events:none}
+.version-badge{display:inline-flex;align-items:center;gap:6px;background:#111113;border:0.5px solid #2a2a2e;border-radius:999px;padding:5px 14px;font-size:12px;color:#888;letter-spacing:.04em;margin-bottom:1.75rem}
+.version-badge span{color:#7f77dd;font-weight:500}
+.hero-title{font-size:44px;font-weight:500;letter-spacing:-.02em;color:#f0ede8;margin-bottom:1rem;line-height:1.1}
+.hero-title .accent{background:linear-gradient(90deg,#7f77dd,#5dcaa5,#7f77dd);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite}
+.hero-sub{font-size:15px;color:#666;max-width:480px;margin:0 auto 2rem;line-height:1.7}
+.btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-main{display:inline-flex;align-items:center;gap:8px;background:#7f77dd;color:#f0ede8;border:none;border-radius:8px;padding:11px 22px;font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;transition:background .2s,transform .15s;letter-spacing:.01em}
+.btn-main:hover{background:#9088e8;transform:translateY(-1px)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#888;border:0.5px solid #2a2a2e;border-radius:8px;padding:11px 22px;font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;transition:border-color .2s,color .2s,transform .15s}
+.btn-ghost:hover{border-color:#444;color:#ccc;transform:translateY(-1px)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:0.5px solid #1f1f21}
+.stat{padding:1.5rem;text-align:center;border-right:0.5px solid #1f1f21;transition:background .2s}
+.stat:last-child{border-right:none}
+.stat:hover{background:#0e0e10}
+.stat-num{font-size:26px;font-weight:500;color:#f0ede8;letter-spacing:-.01em}
+.stat-num.purple{color:#7f77dd}
+.stat-label{font-size:12px;color:#555;margin-top:3px;letter-spacing:.04em;text-transform:uppercase}
+.section{padding:2.5rem 2rem;border-bottom:0.5px solid #1f1f21;max-width:960px;margin:0 auto;width:100%}
+.section-label{font-size:11px;color:#555;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5rem}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.feat{background:#0d0d0f;border:0.5px solid #222226;border-radius:12px;padding:1.25rem;transition:background .25s,border-color .25s;cursor:default;position:relative;overflow:hidden}
+.feat::after{content:'';position:absolute;top:-60px;left:0;width:100%;height:1px;background:#7f77dd;opacity:0;animation:scanline 3s linear infinite;animation-delay:calc(var(--d) * 1.1s)}
+.feat:hover{background:#111116;border-color:#3a3a4a}
+.feat:hover::after{opacity:.18}
+.feat-icon{font-size:20px;color:#7f77dd;margin-bottom:10px;display:block;animation:float 3s ease-in-out infinite;animation-delay:calc(var(--d) * .4s)}
+.feat-title{font-size:13px;font-weight:500;color:#d0cec8;margin-bottom:5px}
+.feat-desc{font-size:12px;color:#555;line-height:1.55}
+.versions-row{display:flex;flex-wrap:wrap;gap:8px}
+.ver{background:#111113;border:0.5px solid #1f1f21;border-radius:8px;padding:5px 12px;font-size:12px;color:#666;font-family:monospace;transition:border-color .2s,color .2s}
+.ver:hover{border-color:#7f77dd;color:#9088e8}
+.footer{padding:2rem;text-align:center;display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap}
+.footer a{color:#444;font-size:13px;text-decoration:none;transition:color .2s}
+.footer a:hover{color:#888}
+.footer-dot{width:3px;height:3px;border-radius:50%;background:#2a2a2e;display:inline-block}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="version-badge fade-up d1"><i class="ti ti-package" style="font-size:13px"></i> v3.0.0 · Fabric · <span>1.21.11</span></div>
+  <h1 class="hero-title fade-up d2">Better<span class="accent">Mace</span>Swap</h1>
+  <p class="hero-sub fade-up d3">Advanced mace PvP automation for Minecraft. Auto-swap, aim assist, trigger bot — focus on the fight, not the hotkeys.</p>
+  <div class="btn-row fade-up d4">
+    <a class="btn-main" href="https://www.curseforge.com/minecraft/mc-mods/bettermaceswap" target="_blank"><i class="ti ti-download"></i> Download</a>
+    <a class="btn-ghost" href="https://github.com/thatzritesh911/BetterMaceSwap" target="_blank"><i class="ti ti-brand-github"></i> Source</a>
+  </div>
+</div>
+
+<div class="stats fade-up d5">
+  <div class="stat">
+    <div class="stat-num purple">7K+</div>
+    <div class="stat-label">Downloads</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">3.0.0</div>
+    <div class="stat-label">Latest</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">MIT</div>
+    <div class="stat-label">License</div>
+  </div>
+</div>
+
+<div class="section fade-up" style="animation-delay:.6s">
+  <div class="section-label">Features</div>
+  <div class="features">
+    <div class="feat" style="--d:0"><i class="ti ti-arrows-exchange feat-icon"></i><div class="feat-title">Auto attribute swap</div><div class="feat-desc">Swaps to mace after sword/axe hit, swaps back after configurable delay.</div></div>
+    <div class="feat" style="--d:1"><i class="ti ti-brain feat-icon"></i><div class="feat-title">Smart switch</div><div class="feat-desc">Density when falling, Breach when grounded. Automatic every time.</div></div>
+    <div class="feat" style="--d:2"><i class="ti ti-target feat-icon"></i><div class="feat-title">Aim assist</div><div class="feat-desc">Smooth target tracking while falling or always, fully configurable speed.</div></div>
+    <div class="feat" style="--d:3"><i class="ti ti-robot feat-icon"></i><div class="feat-title">Trigger bot</div><div class="feat-desc">Auto attacks when locked target hits your crosshair.</div></div>
+    <div class="feat" style="--d:4"><i class="ti ti-shield-off feat-icon"></i><div class="feat-title">Auto stun slam</div><div class="feat-desc">Axe stuns shields, mace slam follow-up, sword chain finish.</div></div>
+    <div class="feat" style="--d:5"><i class="ti ti-wind feat-icon"></i><div class="feat-title">Pearl catch</div><div class="feat-desc">Fires wind charge after ender pearl throw while looking up.</div></div>
+    <div class="feat" style="--d:6"><i class="ti ti-run feat-icon"></i><div class="feat-title">Lunge swap</div><div class="feat-desc">Swaps to lunge spear on left click, auto-swaps back instantly.</div></div>
+    <div class="feat" style="--d:7"><i class="ti ti-shirt feat-icon"></i><div class="feat-title">Auto chestplate</div><div class="feat-desc">Equips chestplate when close to target during fall.</div></div>
+  </div>
+</div>
+
+<div class="section fade-up" style="animation-delay:.7s">
+  <div class="section-label">Supported versions</div>
+  <div class="versions-row">
+    <span class="ver">1.21.11</span>
+    <span class="ver">1.21.10</span>
+    <span class="ver">26.1</span>
+    <span class="ver">26.1.1</span>
+    <span class="ver">26.1.2</span>
+  </div>
+</div>
+
+<div class="footer fade-up" style="animation-delay:.8s">
+  <a href="https://www.curseforge.com/minecraft/mc-mods/bettermaceswap" target="_blank">CurseForge</a>
+  <div class="footer-dot"></div>
+  <a href="https://github.com/thatzritesh911/BetterMaceSwap" target="_blank">GitHub</a>
+  <div class="footer-dot"></div>
+  <span style="font-size:13px;color:#333">by thatzritesh911</span>
+</div>
+
+</body>
+</html>
