@@ -18,7 +18,7 @@ A Fabric client-side PvP automation mod for Minecraft 1.21.11.
 - Cloth Config
 - Mod Menu
 - Java 21
-- Minecraft 26.1
+- Minecraft 26.2
 
 ## Building
 ```
