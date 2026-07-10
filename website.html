@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BetterMaceSwap — Fabric PvP Mod</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --bg2: #131316;
+    --bg3: #1a1a1f;
+    --surface: #1e1e24;
+    --surface2: #25252d;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #f0f0f5;
+    --text2: #a0a0b0;
+    --text3: #65657a;
+    --accent: #7c6dfa;
+    --accent2: #9d91fc;
+    --accent-bg: rgba(124,109,250,0.12);
+    --accent-border: rgba(124,109,250,0.3);
+    --green: #3dcb82;
+    --green-bg: rgba(61,203,130,0.1);
+    --gold: #f0b429;
+    --gold-bg: rgba(240,180,41,0.1);
+    --red: #f06060;
+    --red-bg: rgba(240,96,96,0.1);
+    --radius: 12px;
+    --mono: 'JetBrains Mono', monospace;
+    color-scheme: dark;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f5f5f8;
+      --bg2: #ebebf0;
+      --bg3: #e0e0e8;
+      --surface: #ffffff;
+      --surface2: #f0f0f5;
+      --border: rgba(0,0,0,0.07);
+      --border2: rgba(0,0,0,0.13);
+      --text: #0d0d14;
+      --text2: #4a4a5a;
+      --text3: #8a8a9a;
+      --accent: #5b4ee8;
+      --accent2: #7c6dfa;
+      --accent-bg: rgba(91,78,232,0.08);
+      --accent-border: rgba(91,78,232,0.25);
+      --green: #18a460;
+      --green-bg: rgba(24,164,96,0.08);
+      --gold: #c47a00;
+      --gold-bg: rgba(196,122,0,0.08);
+      --red: #d43a3a;
+      --red-bg: rgba(212,58,58,0.08);
+      color-scheme: light;
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: 1rem; letter-spacing: -0.02em;
+  }
+  .nav-logo .mace-icon {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .nav-links {
+    display: flex; align-items: center; gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.875rem; color: var(--text2);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    display: flex; gap: 10px;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.875rem; font-weight: 500;
+    cursor: pointer; border: none;
+    transition: all 0.2s;
+    font-family: inherit;
+    text-decoration: none;
+  }
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--text2);
+  }
+  .btn-ghost:hover { background: var(--surface); color: var(--text); }
+  .btn-accent {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-accent:hover { background: var(--accent2); transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,109,250,0.15) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -60%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+    pointer-events: none;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px;
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: 999px;
+    font-size: 0.78rem; font-weight: 600; color: var(--accent2);
+    margin-bottom: 2rem;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    animation: fadeUp 0.6s ease both;
+  }
+  .badge-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s ease infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+  .hero h1 {
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 1.25rem;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--accent) 0%, #a78bfa 50%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-sub {
+    font-size: 1.15rem; color: var(--text2);
+    max-width: 560px; margin: 0 auto 2.5rem;
+    line-height: 1.7;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+  .hero-actions {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    margin-bottom: 4rem;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+  .btn-lg { padding: 12px 24px; font-size: 0.95rem; border-radius: 10px; }
+
+  /* STATS */
+  .stats-row {
+    display: flex; gap: 3rem; flex-wrap: wrap; justify-content: center;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-size: 2rem; font-weight: 800;
+    letter-spacing: -0.04em;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-label { font-size: 0.8rem; color: var(--text3); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; margin-top: 2px; }
+
+  /* SECTIONS */
+  section {
+    padding: 6rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .section-label {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent2);
+    margin-bottom: 0.75rem;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .section-label::before,
+  .section-label::after {
+    content: '';
+    display: inline-block;
+    width: 20px; height: 2px;
+    background: var(--accent);
+    border-radius: 1px;
+  }
+  .section-title {
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 800; letter-spacing: -0.03em;
+    line-height: 1.15; margin-bottom: 1rem;
+  }
+  .section-desc { color: var(--text2); max-width: 560px; font-size: 1.05rem; line-height: 1.7; margin: 0 auto 3rem; }
+
+  /* FEATURES GRID */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+    display: block;
+  }
+  .feature-card:hover,
+  .feature-card[open] {
+    border-color: var(--accent-border);
+    background: var(--accent-bg);
+  }
+  .feature-card summary {
+    padding: 1.75rem;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .feature-card summary::-webkit-details-marker { display: none; }
+  .feature-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  .feature-card h3 {
+    font-size: 1rem; font-weight: 700;
+    letter-spacing: -0.01em;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .feature-chevron {
+    width: 16px; height: 16px;
+    color: var(--text3);
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+  .feature-card[open] .feature-chevron { transform: rotate(180deg); }
+  .feature-body {
+    padding: 0 1.75rem 1.75rem;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+  }
+  .feature-card p {
+    font-size: 0.875rem; color: var(--text2);
+    line-height: 1.6; position: relative;
+  }
+  .feature-tag {
+    display: inline-block;
+    margin-top: 0.75rem;
+    padding: 3px 10px;
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: 999px;
+    font-size: 0.7rem; font-weight: 600; color: var(--accent2);
+    font-family: var(--mono);
+    position: relative;
+  }
+
+  /* COMMAND SHOWCASE */
+  .command-section {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 5rem 0;
+  }
+  .command-section > .inner { max-width: 1100px; margin: 0 auto; padding: 0 2rem; text-align: center; }
+  .terminal {
+    background: #0a0a0c;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    overflow: hidden;
+    font-family: var(--mono);
+    text-align: left;
+  }
+  @media (prefers-color-scheme: light) {
+    .terminal { background: #1a1a22; }
+  }
+  .terminal-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.03);
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #ffbd2e; }
+  .dot-g { background: #28c840; }
+  .terminal-body { padding: 1.5rem; }
+  .cmd-line {
+    display: flex; align-items: baseline; gap: 10px;
+    font-size: 0.875rem; line-height: 2;
+  }
+  .cmd-prompt { color: var(--accent); font-weight: 600; flex-shrink: 0; }
+  .cmd-text { color: #e0e0f0; }
+  .cmd-comment { color: #555570; }
+  .cmd-toggle-on { color: var(--green); font-weight: 600; }
+  .cmd-toggle-off { color: var(--red); }
+  .cmd-param { color: var(--gold); }
+
+  /* COMMANDS GRID */
+  .commands-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+    margin-top: 2rem;
+    align-items: start;
+  }
+  .commands-grid .command-chip:last-child {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 100%;
+    max-width: 260px;
+  }
+  .command-chip {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 1.25rem 1.25rem;
+    display: flex; flex-direction: column; align-items: center;
+    transition: all 0.2s;
+    text-align: center;
+    cursor: pointer;
+  }
+  .command-chip:hover,
+  .command-chip.open {
+    border-color: var(--accent-border);
+    background: var(--accent-bg);
+  }
+  .command-chip-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--accent-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+    margin-bottom: 0.75rem;
+  }
+  .command-chip-text { width: 100%; }
+  .command-chip-cmd {
+    font-family: var(--mono);
+    font-size: 0.8rem; font-weight: 600;
+    color: var(--accent2); margin-bottom: 3px;
+  }
+  .command-chip-desc { font-size: 0.8rem; color: var(--text2); }
+  .command-chip-bullets {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding-left: 1rem;
+    list-style: disc;
+    text-align: left;
+  }
+  .command-chip-bullets li { font-size: 0.75rem; color: var(--text2); line-height: 1.7; font-family: var(--mono); }
+
+  /* TECH SECTION */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .tech-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    text-align: center;
+    transition: all 0.25s;
+  }
+  .tech-card:hover {
+    border-color: var(--accent-border);
+    transform: translateY(-3px);
+  }
+  .tech-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+  .tech-name { font-size: 0.875rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .tech-detail { font-size: 0.75rem; color: var(--text3); font-family: var(--mono); }
+
+  /* DOWNLOAD SECTION */
+  .download-section { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5rem 0; }
+  .download-section > .inner { max-width: 1100px; margin: 0 auto; padding: 0 2rem; text-align: center; }
+  .platform-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 2rem;
+  }
+  .platform-card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    display: flex; flex-direction: column; align-items: center; gap: 1.25rem;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .platform-card.featured {
+    border-color: var(--accent-border);
+  }
+  .platform-card.featured::after {
+    content: 'Most Popular';
+    position: absolute; top: 14px; right: -28px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.7rem; font-weight: 700;
+    padding: 4px 36px;
+    transform: rotate(45deg);
+    letter-spacing: 0.04em;
+  }
+  .platform-card:hover { transform: translateY(-4px); border-color: var(--accent-border); }
+  .platform-logo { font-size: 2.5rem; }
+  .platform-name { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; }
+  .platform-desc { font-size: 0.875rem; color: var(--text2); line-height: 1.6; }
+  .platform-stats {
+    display: flex; gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    width: 100%;
+    justify-content: center;
+  }
+  .pstat { flex: 1; }
+  .pstat-num { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; color: var(--accent2); }
+  .pstat-label { font-size: 0.7rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* FAQ */
+  .faq-list { display: flex; flex-direction: column; gap: 2px; text-align: left; }
+  .faq-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .faq-q {
+    padding: 1.1rem 1.5rem;
+    font-weight: 600; font-size: 0.95rem;
+    cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: background 0.2s;
+    list-style: none;
+    user-select: none;
+  }
+  .faq-q:hover { background: var(--surface2); }
+  .faq-q::marker { display: none; }
+  .faq-chevron {
+    width: 20px; height: 20px; flex-shrink: 0;
+    transition: transform 0.3s;
+    color: var(--text3);
+  }
+  details[open] .faq-chevron { transform: rotate(180deg); }
+  .faq-a {
+    padding: 0 1.5rem 1.25rem;
+    font-size: 0.9rem; color: var(--text2); line-height: 1.7;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex; justify-content: center; align-items: center;
+    flex-direction: column; gap: 1rem;
+    text-align: center;
+  }
+  .footer-left { font-size: 0.85rem; color: var(--text3); }
+  .footer-left strong { color: var(--text2); }
+  .footer-links { display: flex; gap: 1.5rem; justify-content: center; }
+  .footer-links a { font-size: 0.85rem; color: var(--text3); transition: color 0.2s; }
+  .footer-links a:hover { color: var(--accent2); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* MACE ANIMATION */
+
+
+  .divider {
+    width: 60px; height: 3px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    border-radius: 2px;
+    margin: 0 auto 2.5rem;
+  }
+
+  .highlight { color: var(--accent2); }
+
+  .version-btn {
+    font-family: inherit;
+    font-size: 0.85rem; font-weight: 600;
+    padding: 8px 20px;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .version-btn.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .live-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green);
+    display: inline-block;
+    animation: pulse 1.6s ease infinite;
+    margin-right: 5px;
+  }
+  .stat-live-label {
+    display: inline-flex; align-items: center;
+    font-size: 0.7rem; color: var(--green); font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  @media (max-width: 640px) {
+    nav .nav-links { display: none; }
+    .hero h1 { font-size: 2.5rem; }
+    .stats-row { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="mace-icon">⚔️</div>
+    <span>BetterMaceSwap</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#commands">Commands</a></li>
+    <li><a href="#tech">Stack</a></li>
+    <li><a href="#download">Download</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="https://discord.gg/4C6rwxVTyq" class="btn btn-ghost">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037 19.736 19.736 0 0 0-4.885 1.515.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.927 1.793 8.18 1.793 12.061 0a.073.073 0 0 1 .079.009c.12.099.246.198.373.292a.077.077 0 0 1-.006.128 12.3 12.3 0 0 1-1.873.892.076.076 0 0 0-.04.106c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.029 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.211 0 2.176 1.096 2.157 2.42 0 1.333-.955 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+      Discord
+    </a>
+    <a href="#download" class="btn btn-accent">Download</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+
+  <div class="badge">
+    <span class="badge-dot"></span>
+    Fabric Client-Side Mod
+  </div>
+
+  <h1>Better<span>Mace</span>Swap</h1>
+  <p class="hero-sub">The most advanced PvP automation mod for Fabric. Stun slams, pearl catch, aim assist, triggerbot — all in one lightweight client-side mod.</p>
+
+  <div class="hero-actions">
+    <a href="https://www.curseforge.com/minecraft/mc-mods/bettermaceswap" class="btn btn-accent btn-lg">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.53 2C7.29 2 3 6.26 3 11.5c0 2.7 1.12 5.14 2.92 6.89L12.53 22l6.61-3.61A9.46 9.46 0 0 0 22 11.5C22 6.26 17.77 2 12.53 2zm-1.4 13.5-3.6-3.6 1.4-1.4 2.2 2.2 4.6-4.6 1.4 1.4-6 6z"/></svg>
+      Get on CurseForge
+    </a>
+    <a href="https://discord.gg/4C6rwxVTyq" class="btn btn-ghost btn-lg">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037 19.736 19.736 0 0 0-4.885 1.515.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.927 1.793 8.18 1.793 12.061 0a.073.073 0 0 1 .079.009c.12.099.246.198.373.292a.077.077 0 0 1-.006.128 12.3 12.3 0 0 1-1.873.892.076.076 0 0 0-.04.106c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.029 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.211 0 2.176 1.096 2.157 2.42 0 1.333-.955 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+      Join Discord
+    </a>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-num" id="liveDownloadNum">27.5k+</div>
+      <div class="stat-live-label"><span class="live-dot"></span>Downloads</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">Modern</div>
+      <div class="stat-label">MC Version</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">Fabric</div>
+      <div class="stat-label">Loader</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">Free</div>
+      <div class="stat-label">Always</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="reveal">
+    <div class="section-label">What it does</div>
+    <h2 class="section-title">Every PvP tool<br />you actually need</h2>
+    <p class="section-desc">Precision-engineered features for competitive Minecraft PvP — each one configurable, each one fast. Tap a feature to see what it does.</p>
+  </div>
+
+  <div class="features-grid reveal">
+    <details class="feature-card">
+      <summary>
+        <div class="feature-icon">💥</div>
+        <h3>Stun Slam <svg class="feature-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></h3>
+      </summary>
+      <div class="feature-body">
+        <p>Automated stun slam timing with configurable tick windows. Fires at exactly the right moment based on mace wind-up state.</p>
+      </div>
+    </details>
+    <details class="feature-card">
+      <summary>
+        <div class="feature-icon">🎯</div>
+        <h3>Aim Assist <svg class="feature-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></h3>
+      </summary>
+      <div class="feature-body">
+        <p>Smooth, constant-speed yaw correction. No jitter, no snap — configurable aimSpeed with clamped step math to feel natural.</p>
+      </div>
+    </details>
+    <details class="feature-card">
+      <summary>
+        <div class="feature-icon">🖱️</div>
+        <h3>Triggerbot <svg class="feature-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></h3>
+      </summary>
+      <div class="feature-body">
+        <p>Auto-attacks when your crosshair lands on a player. Ray-cast based targeting with range and delay configuration.</p>
+      </div>
+    </details>
+    <details class="feature-card">
+      <summary>
+        <div class="feature-icon">🧪</div>
+        <h3>Pearl Catch <svg class="feature-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></h3>
+      </summary>
+      <div class="feature-body">
+        <p>State machine driven ender pearl catch automation. Tracks projectile trajectory and triggers pickup at optimal distance.</p>
+      </div>
+    </details>
+    <details class="feature-card">
+      <summary>
+        <div class="feature-icon">💨</div>
+        <h3>Wind Charge Automation <svg class="feature-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></h3>
+      </summary>
+      <div class="feature-body">
+        <p>Automates wind charge timing relative to mace swing state. Boosts burst damage windows without input lag.</p>
+      </div>
+    </details>
+    <details class="feature-card">
+      <summary>
+        <div class="feature-icon">🔄</div>
+        <h3>Lunge Swap <svg class="feature-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></h3>
+      </summary>
+      <div class="feature-body">
+        <p>Auto-swaps between mace and other tools during lunge phase. Fully configurable slot index and swap threshold.</p>
+      </div>
+    </details>
+    <details class="feature-card">
+      <summary>
+        <div class="feature-icon">🛡️</div>
+        <h3>Auto Chestplate <svg class="feature-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></h3>
+      </summary>
+      <div class="feature-body">
+        <p>Automatically equips chestplate post-swap based on combat state detection. No manual slot management mid-fight.</p>
+      </div>
+    </details>
+    <details class="feature-card">
+      <summary>
+        <div class="feature-icon">⚙️</div>
+        <h3>Mod Menu Config GUI <svg class="feature-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></h3>
+      </summary>
+      <div class="feature-body">
+        <p>Full Mod Menu integration. Open the config screen straight from the mods list, toggle every feature there — zero command typing mid-game.</p>
+        <span class="feature-tag">mod menu</span>
+      </div>
+    </details>
+    <details class="feature-card">
+      <summary>
+        <div class="feature-icon">💬</div>
+        <h3>Clickable Chat Toggles <svg class="feature-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></h3>
+      </summary>
+      <div class="feature-body">
+        <p>/bms status prints every feature grouped by category — combat, aim, pearl, stunslam, misc — as clickable ON/OFF toggles. No GUI needed.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- COMMANDS -->
+<div class="command-section" id="commands">
+  <div class="inner">
+    <div class="reveal">
+      <div class="section-label">Commands</div>
+      <h2 class="section-title">Full Brigadier command system</h2>
+      <p class="section-desc">Every feature is accessible via <code style="font-family:var(--mono);color:var(--accent2);font-size:0.9em">/bms</code> with tab-completion and clickable chat output.</p>
+    </div>
+
+    <div class="terminal reveal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <span style="font-size:0.75rem;color:#555;margin-left:8px">Minecraft Chat</span>
+      </div>
+      <div class="terminal-body">
+        <div class="cmd-line">
+          <span class="cmd-prompt">></span>
+          <span class="cmd-text">/bms status</span>
+        </div>
+        <div class="cmd-line" style="padding-left:1rem">
+          <span class="cmd-comment">COMBAT  </span>
+          <span class="cmd-comment">Attribute Swap: </span><span class="cmd-toggle-on">[ON]</span>
+          <span class="cmd-comment">  Lunge Swap: </span><span class="cmd-toggle-off">[OFF]</span>
+        </div>
+        <div class="cmd-line" style="padding-left:1rem">
+          <span class="cmd-comment">AIM  </span>
+          <span class="cmd-comment">Aim Assist: </span><span class="cmd-toggle-on">[ON]</span>
+          <span class="cmd-comment">  Trigger Bot: </span><span class="cmd-toggle-on">[ON]</span>
+        </div>
+        <div class="cmd-line" style="padding-left:1rem">
+          <span class="cmd-comment">PEARL  </span>
+          <span class="cmd-comment">Pearl Catch: </span><span class="cmd-toggle-on">[ON]</span>
+          <span class="cmd-comment">  Return Mode: </span><span class="cmd-param">[SWORD]</span>
+        </div>
+        <div class="cmd-line" style="margin-top:0.5rem">
+          <span class="cmd-prompt">></span>
+          <span class="cmd-text">/bms aim aim_assist <span class="cmd-param">on</span></span>
+        </div>
+        <div class="cmd-line" style="padding-left:1rem">
+          <span class="cmd-comment">[BMS] Aim Assist: </span><span class="cmd-toggle-on">ON</span>
+        </div>
+        <div class="cmd-line" style="margin-top:0.5rem">
+          <span class="cmd-prompt">></span>
+          <span class="cmd-text">/bms aim aim_speed <span class="cmd-param">80</span></span>
+        </div>
+        <div class="cmd-line" style="padding-left:1rem">
+          <span class="cmd-comment">[BMS] Aim Speed: </span><span class="cmd-param">80</span>
+        </div>
+        <div class="cmd-line" style="margin-top:0.5rem">
+          <span class="cmd-prompt">></span>
+          <span class="cmd-text">/bms stunslam safe_mode <span class="cmd-param">on</span></span>
+        </div>
+        <div class="cmd-line" style="padding-left:1rem">
+          <span class="cmd-comment">[BMS] Safe Stun Slam: </span><span class="cmd-toggle-on">ON</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="commands-grid reveal" style="margin-top:1.5rem">
+      <div class="command-chip">
+        <div class="command-chip-icon">📋</div>
+        <div class="command-chip-text">
+          <div class="command-chip-cmd">/bms status</div>
+          <ul class="command-chip-bullets">
+            <li>Shows all features grouped by category</li>
+            <li>Each toggle is clickable in chat</li>
+            <li>Includes enum values and numeric params</li>
+          </ul>
+        </div>
+      </div>
+      <div class="command-chip">
+        <div class="command-chip-icon">⚔️</div>
+        <div class="command-chip-text">
+          <div class="command-chip-cmd">/bms combat</div>
+          <ul class="command-chip-bullets">
+            <li>attributeswap on|off</li>
+            <li>lungeswap on|off</li>
+            <li>smartswitch on|off</li>
+            <li>airpots on|off</li>
+            <li>mace_mode density|breach</li>
+            <li>attribute_swap_mode all|weapons_only</li>
+            <li>target_players on|off</li>
+            <li>target_mobs on|off</li>
+            <li>lunge_delay &lt;0-3&gt;</li>
+            <li>attribute_swap_ticks &lt;1-5&gt;</li>
+          </ul>
+        </div>
+      </div>
+      <div class="command-chip">
+        <div class="command-chip-icon">💥</div>
+        <div class="command-chip-text">
+          <div class="command-chip-cmd">/bms stunslam</div>
+          <ul class="command-chip-bullets">
+            <li>stun_slam on|off</li>
+            <li>return_slot on|off</li>
+            <li>safe_mode on|off</li>
+            <li>trigger_mode weapons|all</li>
+          </ul>
+        </div>
+      </div>
+      <div class="command-chip">
+        <div class="command-chip-icon">🧪</div>
+        <div class="command-chip-text">
+          <div class="command-chip-cmd">/bms pearl</div>
+          <ul class="command-chip-bullets">
+            <li>pearl_catch on|off</li>
+            <li>return_angle on|off</li>
+            <li>return_mode previous|sword|axe|elytra</li>
+            <li>catch_angle &lt;60-90&gt;</li>
+            <li>catch_delay &lt;1-5&gt;</li>
+            <li>return_angle_value &lt;-90 to 90&gt;</li>
+          </ul>
+        </div>
+      </div>
+      <div class="command-chip">
+        <div class="command-chip-icon">🎯</div>
+        <div class="command-chip-text">
+          <div class="command-chip-cmd">/bms aim</div>
+          <ul class="command-chip-bullets">
+            <li>aim_assist on|off</li>
+            <li>triggerbot on|off</li>
+            <li>triggerbot_falling_only on|off</li>
+            <li>auto_chestplate on|off</li>
+            <li>aim_speed &lt;20-100&gt;</li>
+            <li>range &lt;1-25&gt;</li>
+            <li>mode while_falling|always</li>
+            <li>bone eye|chest|legs</li>
+            <li>target_players on|off</li>
+            <li>target_mobs on|off</li>
+          </ul>
+        </div>
+      </div>
+      <div class="command-chip">
+        <div class="command-chip-icon">💨</div>
+        <div class="command-chip-text">
+          <div class="command-chip-cmd">/bms misc</div>
+          <ul class="command-chip-bullets">
+            <li>wind on|off</li>
+            <li>rocketboost on|off</li>
+            <li>autojump_wind on|off</li>
+            <li>experimental_pearl on|off</li>
+          </ul>
+        </div>
+      </div>
+      <div class="command-chip">
+        <div class="command-chip-icon">⚙️</div>
+        <div class="command-chip-text">
+          <div class="command-chip-cmd">/bms menu</div>
+          <ul class="command-chip-bullets">
+            <li>Opens Mod Menu config screen</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TECH -->
+<section id="tech">
+  <div class="reveal">
+    <div class="section-label">Built with</div>
+    <h2 class="section-title">The stack</h2>
+    <p class="section-desc">Client-side only. No server permissions needed. Lightweight enough to run on an i5.</p>
+  </div>
+
+  <div class="tech-grid reveal">
+    <div class="tech-card">
+      <div class="tech-icon">🧶</div>
+      <div class="tech-name">Fabric API</div>
+      <div class="tech-detail">Loader + Mixins</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">⚙️</div>
+      <div class="tech-name">Mod Menu</div>
+      <div class="tech-detail">In-game Config GUI</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">🌐</div>
+      <div class="tech-name">Open Source</div>
+      <div class="tech-detail">MIT · GitHub</div>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD -->
+<div class="download-section" id="download">
+  <div class="inner">
+    <div class="reveal">
+      <div class="section-label">Get it</div>
+      <h2 class="section-title">Download BetterMaceSwap</h2>
+      <p class="section-desc">Available on CurseForge. Join the Discord for updates, support, and betas.</p>
+    </div>
+
+    <div class="platform-cards">
+      <div class="platform-card reveal">
+        <div class="platform-logo">💬</div>
+        <div>
+          <div class="platform-name">Discord</div>
+          <div class="platform-desc" style="margin-top:6px">BetterMods HQ — get support, report bugs, grab early builds, and talk PvP with the community.</div>
+        </div>
+        <div class="platform-stats">
+          <div class="pstat">
+            <div class="pstat-num">Active</div>
+            <div class="pstat-label">Community</div>
+          </div>
+          <div class="pstat">
+            <div class="pstat-num">Free</div>
+            <div class="pstat-label">To Join</div>
+          </div>
+        </div>
+        <a href="https://discord.gg/4C6rwxVTyq" class="btn btn-ghost" style="width:100%;justify-content:center">
+          Join Discord
+        </a>
+      </div>
+
+<div class="platform-card featured reveal">
+        <div class="platform-logo"><svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M12.53 2C7.29 2 3 6.26 3 11.5c0 2.7 1.12 5.14 2.92 6.89L12.53 22l6.61-3.61A9.46 9.46 0 0 0 22 11.5C22 6.26 17.77 2 12.53 2zm-1.4 13.5-3.6-3.6 1.4-1.4 2.2 2.2 4.6-4.6 1.4 1.4-6 6z"/></svg></div>
+        <div>
+          <div class="platform-name">CurseForge</div>
+          <div class="platform-desc" style="margin-top:6px">The original Minecraft mod host. Wide reach, CurseForge rewards program included.</div>
+        </div>
+        <div class="platform-stats">
+          <div class="pstat">
+            <div class="pstat-num" id="cardDownloadNum">28.4k+</div>
+            <div class="pstat-label">Downloads</div>
+          </div>
+          <div class="pstat">
+            <div class="pstat-num">Modern</div>
+            <div class="pstat-label">Versions</div>
+          </div>
+        </div>
+        <a href="https://www.curseforge.com/minecraft/mc-mods/bettermaceswap" class="btn btn-accent" style="width:100%;justify-content:center">
+          Download from CurseForge
+        </a>
+      </div>
+
+      <div class="platform-card reveal">
+        <div class="platform-logo"><svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></div>
+        <div>
+          <div class="platform-name">GitHub</div>
+          <div class="platform-desc" style="margin-top:6px">Browse the full source, open issues, or build it yourself from the latest commit.</div>
+        </div>
+        <div class="platform-stats">
+          <div class="pstat">
+            <div class="pstat-num">Open</div>
+            <div class="pstat-label">Source</div>
+          </div>
+          <div class="pstat">
+            <div class="pstat-num">MIT</div>
+            <div class="pstat-label">License</div>
+          </div>
+        </div>
+        <a href="https://github.com/thatzritesh911/BetterMaceSwap" class="btn btn-ghost" style="width:100%;justify-content:center">
+          View on GitHub
+        </a>
+      </div>
+    </div>
+
+    <div style="margin-top:2rem;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:2.5rem 2rem;text-align:center;max-width:520px;margin-left:auto;margin-right:auto" class="reveal">
+      <h3 style="font-size:1.3rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:1.5rem">Find the Dependencies</h3>
+      <div style="font-weight:700;font-size:0.95rem;margin-bottom:1rem">Select your version</div>
+      <div id="versionToggle" style="display:inline-flex;background:var(--bg2);border:1px solid var(--border2);border-radius:999px;padding:5px;gap:4px">
+        <button type="button" class="version-btn active" data-version="1.21.10">1.21.10</button>
+        <button type="button" class="version-btn" data-version="1.21.11">1.21.11</button>
+        <button type="button" class="version-btn" data-version="26.1">26.1</button>
+        <button type="button" class="version-btn" data-version="26.2">26.2</button>
+      </div>
+      <ul id="versionDeps" style="margin-top:1.5rem;font-size:0.9rem;color:var(--text2);list-style:disc;display:inline-block;text-align:left;padding-left:1.25rem;line-height:1.9">
+        <li>Fabric Loader 0.18.4</li>
+        <li>Fabric API 0.138.4+1.21.10</li>
+        <li>Cloth Config 15.0.127</li>
+        <li>Mod Menu 13.0.0</li>
+        <li>Java 21+</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="reveal">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-title">Common questions</h2>
+    <p class="section-desc">Things people actually ask about BetterMaceSwap.</p>
+  </div>
+
+  <div class="faq-list reveal">
+    <details class="faq-item">
+      <summary class="faq-q">
+        Is this client-side only?
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <div class="faq-a">Yes, it runs entirely on your client — no server-side install needed. That said, this isn't a hacking or cheat client and isn't meant to be used to gain an unfair edge on public servers. It's built for practicing PvP on your own personal server or with friends who know you're using it. Use it on servers where automation tools aren't allowed and you risk getting banned — that's on you, not on us.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-q">
+        Does it conflict with performance or shader mods?
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <div class="faq-a">Most performance mods run fine alongside it. Some shader mods have caused memory-related stuttering for a few users — if you notice lag spikes, try running without shaders first to rule it out.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-q">
+        How do I open the config screen?
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <div class="faq-a">Open it from Mod Menu in your mods list, or use <code style="font-family:var(--mono);color:var(--accent2)">/bms status</code> in chat to get clickable toggles right there. Every toggle is mirrored between the two.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-q">
+        What Minecraft versions are supported?
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <div class="faq-a">Supported on 1.21.10, 1.21.11, 26.1, and 26.2. The 1.21.10/1.21.11 builds use Yarn mappings; 26.1 and 26.2 use Mojang mappings. Check the CurseForge page for the exact build matching your version.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-q">
+        Is it free? Will it stay free?
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <div class="faq-a">Yes, completely free — and it'll never be paywalled.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-q">
+        Who made this?
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <div class="faq-a">BetterMaceSwap is built solo by a self-taught developer from Pune, India — started as a personal PvP tool and grew to 27,500+ downloads by word of mouth.</div>
+    </details>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    Built by <strong>The Better Mods Team</strong> · Pune, India · Self-taught since day one
+  </div>
+  <div class="footer-links">
+    <a href="https://www.curseforge.com/minecraft/mc-mods/bettermaceswap"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.53 2C7.29 2 3 6.26 3 11.5c0 2.7 1.12 5.14 2.92 6.89L12.53 22l6.61-3.61A9.46 9.46 0 0 0 22 11.5C22 6.26 17.77 2 12.53 2zm-1.4 13.5-3.6-3.6 1.4-1.4 2.2 2.2 4.6-4.6 1.4 1.4-6 6z"/></svg> CurseForge</a>
+    <a href="https://github.com/thatzritesh911/BetterMaceSwap"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg> GitHub</a>
+    <a href="https://discord.gg/4C6rwxVTyq">Discord</a>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(
+    entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+    { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+  );
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.style.transitionDelay = (i % 4) * 60 + 'ms';
+  });
+
+  // --- Animated FAQ dropdowns (slide down + fade text) ---
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const q = item.querySelector('summary');
+    const a = item.querySelector('.faq-a');
+
+    q.addEventListener('click', e => {
+      e.preventDefault();
+      if (item.classList.contains('animating')) return;
+      item.classList.add('animating');
+
+      if (!item.open) {
+        item.open = true;
+        const target = a.scrollHeight;
+        a.style.transition = 'none';
+        a.style.maxHeight = '0px';
+        a.style.opacity = '0';
+        requestAnimationFrame(() => {
+          a.style.transition = 'max-height 0.35s ease, opacity 0.3s ease 0.08s';
+          a.style.maxHeight = target + 'px';
+          a.style.opacity = '1';
+        });
+        setTimeout(() => {
+          a.style.maxHeight = 'none';
+          item.classList.remove('animating');
+        }, 380);
+      } else {
+        const current = a.scrollHeight;
+        a.style.transition = 'none';
+        a.style.maxHeight = current + 'px';
+        requestAnimationFrame(() => {
+          a.style.transition = 'max-height 0.3s ease, opacity 0.2s ease';
+          a.style.maxHeight = '0px';
+          a.style.opacity = '0';
+        });
+        setTimeout(() => {
+          item.open = false;
+          item.classList.remove('animating');
+        }, 300);
+      }
+    });
+  });
+
+  // --- Animated feature card dropdowns (slide down + fade text) ---
+  document.querySelectorAll('.feature-card').forEach(card => {
+    const summary = card.querySelector('summary');
+    const body = card.querySelector('.feature-body');
+
+    summary.addEventListener('click', e => {
+      e.preventDefault();
+      if (card.classList.contains('animating')) return;
+      card.classList.add('animating');
+
+      if (!card.open) {
+        card.open = true;
+        const target = body.scrollHeight;
+        body.style.transition = 'none';
+        body.style.maxHeight = '0px';
+        body.style.opacity = '0';
+        requestAnimationFrame(() => {
+          body.style.transition = 'max-height 0.35s ease, opacity 0.3s ease 0.08s';
+          body.style.maxHeight = target + 'px';
+          body.style.opacity = '1';
+        });
+        setTimeout(() => {
+          body.style.maxHeight = 'none';
+          card.classList.remove('animating');
+        }, 380);
+      } else {
+        const current = body.scrollHeight;
+        body.style.transition = 'none';
+        body.style.maxHeight = current + 'px';
+        requestAnimationFrame(() => {
+          body.style.transition = 'max-height 0.3s ease, opacity 0.2s ease';
+          body.style.maxHeight = '0px';
+          body.style.opacity = '0';
+        });
+        setTimeout(() => {
+          card.open = false;
+          card.classList.remove('animating');
+        }, 300);
+      }
+    });
+  });
+
+  // --- Version selector (26.1 / 26.2 deps pending — not pushed to GitHub yet) ---
+  const versionDeps = {
+    '1.21.10': ['Fabric Loader 0.18.4', 'Fabric API 0.138.4+1.21.10', 'Cloth Config 15.0.127', 'Mod Menu 13.0.0', 'Java 21+'],
+    '1.21.11': ['Fabric Loader 0.18.4', 'Fabric API 0.138.4+1.21.10', 'Cloth Config 15.0.127', 'Mod Menu 13.0.0', 'Java 21+'],
+    '26.1': ['Fabric Loader 0.18.4', 'Fabric API 0.145.1+26.1', 'Cloth Config 26.1.154', 'Mod Menu 18.0.0-alpha.7', 'Java 21+'],
+    '26.2': ['Fabric Loader 0.19.3', 'Fabric API 0.154.0+26.2', 'Cloth Config 26.1.154', 'Mod Menu 20.0.0-beta.4', 'Java 21+']
+  };
+  document.querySelectorAll('.version-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.version-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const list = document.getElementById('versionDeps');
+      list.innerHTML = versionDeps[btn.dataset.version].map(dep => `<li>${dep}</li>`).join('');
+    });
+  });
+
+  // --- Animated command chip dropdowns (slide down + fade text) ---
+  document.querySelectorAll('.command-chip').forEach(chip => {
+    const bullets = chip.querySelector('.command-chip-bullets');
+
+    chip.addEventListener('click', () => {
+      if (chip.classList.contains('animating')) return;
+      chip.classList.add('animating');
+
+      if (!chip.classList.contains('open')) {
+        chip.classList.add('open');
+        const target = bullets.scrollHeight;
+        bullets.style.transition = 'none';
+        bullets.style.maxHeight = '0px';
+        bullets.style.opacity = '0';
+        requestAnimationFrame(() => {
+          bullets.style.transition = 'max-height 0.35s ease, opacity 0.3s ease 0.08s, margin-top 0.35s ease';
+          bullets.style.maxHeight = target + 'px';
+          bullets.style.opacity = '1';
+          bullets.style.marginTop = '0.5rem';
+        });
+        setTimeout(() => {
+          bullets.style.maxHeight = 'none';
+          chip.classList.remove('animating');
+        }, 380);
+      } else {
+        const current = bullets.scrollHeight;
+        bullets.style.transition = 'none';
+        bullets.style.maxHeight = current + 'px';
+        requestAnimationFrame(() => {
+          bullets.style.transition = 'max-height 0.3s ease, opacity 0.2s ease, margin-top 0.3s ease';
+          bullets.style.maxHeight = '0px';
+          bullets.style.opacity = '0';
+          bullets.style.marginTop = '0';
+        });
+        setTimeout(() => {
+          chip.classList.remove('open');
+          chip.classList.remove('animating');
+        }, 300);
+      }
+    });
+  });
+
+// --- Download counter: live via cfwidgets API with localStorage caching ---
+  const downloadEl = document.getElementById('liveDownloadNum');
+  const cardDownloadEl = document.getElementById('cardDownloadNum');
+  const FALLBACK = 27500; 
+  const API_URL = 'https://api.cfwidgets.com/minecraft/mc-mods/bettermaceswap';
+
+  function render(n) {
+    // 1. Round down to the nearest 100 downloads so it updates in chunks
+    const rounded = Math.floor(n / 100) * 100;
+    
+    // 2. Convert to 'k' format with exactly one decimal place (e.g., 28.3k+)
+    const text = (rounded >= 1000
+      ? (rounded / 1000).toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'k'
+      : rounded.toLocaleString()) + '+';
+    
+    // 3. Keep both the top hero and the bottom CurseForge box perfectly in sync
+    if (downloadEl) downloadEl.textContent = text;
+    if (cardDownloadEl) cardDownloadEl.textContent = text;
+  }
+
+  // Instantly load from localStorage cache if available, otherwise use hardcoded fallback
+  const cachedDownloads = localStorage.getItem('bms_download_cache');
+  if (cachedDownloads && !isNaN(cachedDownloads)) {
+    render(parseInt(cachedDownloads, 10));
+  } else {
+    render(FALLBACK);
+  }
+
+  async function pollDownloads() {
+    try {
+      // Connect to the public live API endpoint
+      const res = await fetch(API_URL);
+      if (!res.ok) throw new Error('API fetch failed or rate-limited');
+      
+      const data = await res.json();
+      // Extract the download total safely from the response JSON
+      const total = data?.downloads?.total ?? data?.downloads;
+      
+      if (typeof total === 'number' && total > 0) {
+        localStorage.setItem('bms_download_cache', total);
+        render(total);
+      }
+    } catch (e) {
+      console.warn('API error, using cached value:', e.message);
+    }
+  }
+
+  pollDownloads();
+  setInterval(pollDownloads, 60000); // re-poll live data every 60 seconds
+</script>
+</body>
+</html>
