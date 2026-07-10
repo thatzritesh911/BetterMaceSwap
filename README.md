@@ -42,9 +42,9 @@ A client-side Fabric mod for Minecraft that automates mace PvP combat sequences 
 Minecraft 26.1 / 26.2 · Fabric Loader 0.19.3+ · Fabric API · Cloth Config · Mod Menu · Java 25+
 
 ## Building
-git clone https://github.com/thatzritesh911/BetterMaceSwap
-cd BetterMaceSwap
+```
 gradlew build
+```
 
 ## License
 
